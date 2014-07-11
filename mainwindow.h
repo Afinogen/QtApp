@@ -6,7 +6,9 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
-#include <QDirModel>
+#include <QAbstractItemModel>
+#include "treemodel.h"
+#include "maincontroller.h"
 
 namespace Ui {
 class MainWindow;

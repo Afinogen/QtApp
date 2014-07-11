@@ -31,10 +31,6 @@ void MainWindow::createMenus()
     //ui->menuBar->addMenu(mnEdit);
     ui->menuBar->addMenu(mnService);
     ui->menuBar->addMenu(mnHelp);
-
-
-    QDirModel *model = new QDirModel;
-    ui->treeView->setModel(model);
 }
 
 void MainWindow::showMessage()
@@ -44,23 +40,9 @@ void MainWindow::showMessage()
 
 void MainWindow::connectDB()
 {
-    qDebug() << "begin connect db";
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("customdb.db");
-    qDebug() << db.open();
-    QSqlQuery qry;
-    if (qry.exec("SELECT * FROM `product_category`;"))
-    {
-        // если запрос выполнен, то запускаем цикл перехода по каждой
-        // строке
-        while(qry.next())
-        {
-            QAction *act = new QAction(qry.value(4).toString(),ui->treeView);
-            ui->treeView->addAction(act);
-        }
-    }
-    else
-    {
-        qDebug() << qry.lastError();
-    }
+    MainController *m=new MainController();
+    m->connectDB();
+    ui->treeView->setModel(m->createTreeView());
+    ui->treeView->show();
+    m->closeDB();
 }
