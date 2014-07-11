@@ -18,13 +18,12 @@ void MainWindow::createMenus()
 {
     QMenu * mnFile = new QMenu("File"); // создаём меню Файл
     // ----------- здесь добавляем пункт меню и подключаем его к слоту----
-    QAction *msgAction = new QAction("show Message",mnFile);
-    connect(msgAction, SIGNAL(triggered()), this, SLOT(showMessage()));
-    mnFile->addAction(msgAction);
-
     QAction * mnEdit = new QAction("Пуск",mnFile); // создаём меню Edit
     connect(mnEdit, SIGNAL(triggered()), this, SLOT(connectDB()));
     mnFile->addAction(mnEdit);
+    QAction *msgAction = new QAction("Exit",mnFile);
+    connect(msgAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+    mnFile->addAction(msgAction);
     QMenu * mnService = new QMenu("Service"); // Меню Сервис
     QMenu * mnHelp = new QMenu("Help"); // Меню помощь
     ui->menuBar->addMenu(mnFile); // Добавляем пункты меню в menuBar, т.е. те, которые будут отображаться в гл. окне
@@ -35,7 +34,7 @@ void MainWindow::createMenus()
 
 void MainWindow::showMessage()
 {
-    qDebug() << "menu clicked";
+
 }
 
 void MainWindow::connectDB()

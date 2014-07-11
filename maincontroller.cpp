@@ -9,9 +9,10 @@ MainController::~MainController()
 }
 void MainController::connectDB()
 {
+    setupDB();
     qDebug() << "begin connect db";
     db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("keaz.db");
+    db.setDatabaseName(databasePath);
     qDebug() << "open db: " << db.open();
 }
 void MainController::closeDB()
@@ -49,4 +50,27 @@ void MainController::createTreeItem(TreeItem *parentItem, int parentId)
 void MainController::TreeItemClick()
 {
     qDebug() << "item click";
+}
+void MainController::setupDB()
+{
+    QString tmpString = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+    QFileInfo databaseFileInfo(QString("%1/%2").arg(tmpString).arg("keaz.db"));
+    databasePath = databaseFileInfo.absoluteFilePath();
+    qDebug() << "databasePath: "+databasePath;  // to display full name with path of database
+
+    if ( !databaseFileInfo.exists() )
+    {
+        qDebug()<<"Database does not exist";
+        #ifdef Q_OS_ANDROID
+        bool copySuccess = QFile::copy( QString("assets:/keaz.db"), databasePath );
+        if ( !copySuccess )
+        {
+            QMessageBox::critical(this, "Error:", QString("Could not copy database from 'assets' to %1").arg(databasePath));
+            databasePath.clear();
+        }
+        #else
+        Downloader *d=new Downloader();
+        d->getDB("http:://test.ru/keaz.db",databasePath);
+        #endif
+    }
 }
